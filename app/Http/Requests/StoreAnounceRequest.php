@@ -11,7 +11,7 @@ class StoreAnounceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,16 @@ class StoreAnounceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'title' => 'required|string',
+            'description' => 'required|string',
+            'price' => 'required|numeric'
+        ];
+    }
+
+    public function messages() {
+        return [
+            'title.required' => 'Veuillez remplir ce champ',
+            'description.required' => 'Veuillez remplir ce champ'
         ];
     }
 }

@@ -1,11 +1,15 @@
 <?php
 
+use App\Http\Controllers\AnounceController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 //Auth
 Route::post('/auth/register', [UserController::class, 'register']);
+
+Route::post('/anounce/new', [AnounceController::class, 'store']);
+
 Route::get('test', function () {
     return 'test';
 });

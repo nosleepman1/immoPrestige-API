@@ -6,6 +6,7 @@ use App\Models\Anounce;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreAnounceRequest;
 use App\Http\Requests\UpdateAnounceRequest;
+use Exception;
 
 class AnounceController extends Controller
 {
@@ -14,15 +15,24 @@ class AnounceController extends Controller
      */
     public function index()
     {
-        //
+        try{
+
+            return response()->json(Anounce::all(), 200);
+
+        } catch (Exception $e) {
+            return response()->json($e);
+
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(StoreAnounceRequest $request)
     {
-        //
+
+
+
     }
 
     /**
@@ -30,7 +40,19 @@ class AnounceController extends Controller
      */
     public function store(StoreAnounceRequest $request)
     {
-        //
+        try{
+
+           Anounce::create($request->validated());
+
+           response()->json([
+            'message' => 'annonce créé avec success',
+            'data' => $request->validated()
+           ], 201);
+
+            } catch (Exception $e) {
+                return response()->json($e);
+
+         }
     }
 
     /**
