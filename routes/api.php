@@ -9,11 +9,12 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/register', [UserController::class, 'register']);
 
 Route::post('/anounce/new', [AnounceController::class, 'store']);
+Route::get('/anounces', [AnounceController::class, 'index']);
 
 Route::get('test', function () {
     return 'test';
 });
 
-// Route::get('/user', function (Request $request) {
-//     return $request->user();
-// })->middleware('auth:sanctum');
+Route::get('/user', function (Request $request) {
+    return $request->user();
+})->middleware('auth:sanctum');
