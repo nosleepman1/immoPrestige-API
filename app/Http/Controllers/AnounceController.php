@@ -4,20 +4,31 @@ namespace App\Http\Controllers;
 
 use App\Models\Anounce;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\searchAnouceRequest;
 use App\Http\Requests\StoreAnounceRequest;
 use App\Http\Requests\UpdateAnounceRequest;
 use Exception;
+use Illuminate\Http\Request;
 
 class AnounceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(searchAnouceRequest $request)
     {
         try{
+            $data = $request->validated();
 
-            return response()->json(Anounce::all(), 200);
+            $query = Anounce::query();
+            $total = $query->count();
+            $paginatation = $query->paginate(2);
+            $current_page = ($total/$paginatation);
+            $search = $query->where('title', 'like', );
+            return response()->json([
+                'posts' => $query->get(),
+                'total' => $total
+            ], 200);
 
         } catch (Exception $e) {
             return response()->json($e);
