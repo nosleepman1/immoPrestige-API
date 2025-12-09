@@ -12,27 +12,40 @@ use Illuminate\Http\Request;
 
 class AnounceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(searchAnouceRequest $request)
     {
         try{
-            $data = $request->validated();
-
             $query = Anounce::query();
-            $total = $query->count();
-            $paginatation = $query->paginate(2);
-            $current_page = ($total/$paginatation);
-            $search = $query->where('title', 'like', );
+
+            if ($request->has('title') && !empty($request->title)) {
+                $query->where('title', 'like', '%' . $request->title . '%');
+            }
+
+            // PAGINATION : Nombre d'éléments par page (par défaut 15)
+            $perPage = $request->input('per_page', 15);
+
+            // Exécuter la requête avec pagination
+            $anounces = $query->paginate($perPage);
+
             return response()->json([
-                'posts' => $query->get(),
-                'total' => $total
+                'success' => true,
+                'data' => $anounces->items(),
+                'pagination' => [
+                    'total' => $anounces->total(),
+                    'per_page' => $anounces->perPage(),
+                    'current_page' => $anounces->currentPage(),
+                    'last_page' => $anounces->lastPage(),
+                    'from' => $anounces->firstItem(),
+                    'to' => $anounces->lastItem(),
+                ]
             ], 200);
 
         } catch (Exception $e) {
-            return response()->json($e);
-
+            return response()->json([
+                'success' => false,
+                'message' => 'Erreur lors de la récupération des annonces',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 
